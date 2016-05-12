@@ -11,7 +11,7 @@ namespace LSQL
     {
         private string homePath = @"c:\LSQL\";
 
-        public string createDataBase(string name)
+        public string createFolder(string name)
         {
             if (name != "")
             {
@@ -26,7 +26,16 @@ namespace LSQL
                 else
                     return "database had exist";
             }
-            return "success";
+            return "please input name";
+        }
+
+        /// <summary>
+        /// 获取根目录下所有文件夹名
+        /// </summary>
+        /// <returns></returns>
+        public string[] getAllFolder()
+        {
+            return Directory.GetDirectories(homePath);
         }
     }
 }
