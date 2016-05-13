@@ -12,25 +12,22 @@ namespace LSQL
     /// </summary>
     class FileIO
     {
-        private string homePath = @"c:\LSQL\";
-
         /// <summary>
         /// 创建文件夹
         /// </summary>
-        /// <param name="name">文件夹名</param>
+        /// <param name="name">文件夹路径</param>
         /// <returns></returns>
-        public string createFolder(string name)
+        public string createFolder(string path)
         {
-            if (name != "")
+            if (path != "")
             {
-                string allPath = homePath + name;
                 try
                 {
                     // Determine whether the directory exists.
-                    if (!Directory.Exists(allPath))
+                    if (!Directory.Exists(path))
                     {
                         // Create the directory it does not exist.
-                        Directory.CreateDirectory(allPath);
+                        Directory.CreateDirectory(path);
                         return "success";
                     }
                     else
@@ -44,18 +41,17 @@ namespace LSQL
             return "error:empty name";
         }
 
-        public string createFile(string databaseName,string fileName)
+        public string createFile(string path)
         {
-            if (databaseName!="" && fileName!="")
+            if (path!="")
             {
-                string allPath = homePath + databaseName + @"\" + fileName;
                 try
                 {
-                    // Determine whether the directory exists.
-                    if (!File.Exists(allPath))
+                    // Determine whether the fiel exists.
+                    if (!File.Exists(path))
                     {
-                        // Create the directory it does not exist.
-                        File.Create(allPath);
+                        // Create the file it does not exist.
+                        File.Create(path);
                         return "success";
                     }
                     else
@@ -73,9 +69,9 @@ namespace LSQL
         /// 获取根目录下所有文件夹名
         /// </summary>
         /// <returns></returns>
-        public string[] getAllFolder()
+        public string[] getAllFolder(string path)
         {
-            return Directory.GetDirectories(homePath);
+            return Directory.GetDirectories(path);
         }
     }
 }

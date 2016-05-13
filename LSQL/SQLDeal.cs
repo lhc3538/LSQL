@@ -8,11 +8,10 @@ namespace LSQL
 {
     class SQLDeal
     {
-        private FileIO fileIO;  //具体数据库操作类
-        private string currentDataBase;   //当前数据库
+        private BaseCommand baseCommand;
         public SQLDeal()
         {
-            fileIO = new FileIO();
+            baseCommand = new BaseCommand();
         }
         /// <summary>
         /// 终端指令处理函数
@@ -25,39 +24,25 @@ namespace LSQL
             {
                 if (CmdStr[1] == "database")
                 {
-                    string result;
-                    result = fileIO.createFolder(CmdStr[2]);
-                    return result;
+                    return baseCommand.createDataBase(CmdStr[2]);
+                }
+                else if (CmdStr[1] == "table")
+                {
+                    return baseCommand.createTable(CmdStr[2]);
                 }
             }
             else if (CmdStr[0] == "show")
             {
                 if (CmdStr[1] == "databases")
                 {
-                    return showDataBases();
+                    return baseCommand.showDataBases();
                 }
             }
-            else if (CmdStr[0] == "test")
+            else if (CmdStr[0] == "use")
             {
-                return fileIO.createFile("lhc","hahaha");
+                return baseCommand.useDatabase(CmdStr[1]);
             }
             return "Unable to identify";
-        }
-
-        /// <summary>
-        /// 显示所有数据库
-        /// </summary>
-        /// <returns></returns>
-        private string showDataBases()
-        {
-            string result = "";
-            string[] databasesPath = fileIO.getAllFolder(); //返回所有数据库路径
-            for (int i=0;i<databasesPath.Length;i++)
-            {
-                string[] databaseName = databasesPath[i].Split('\\');   //提取最后面的数据库名
-                result += databaseName[databaseName.Length-1] + "\r\n";
-            }
-            return result;
         }
     }
 

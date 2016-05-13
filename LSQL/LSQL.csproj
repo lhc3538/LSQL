@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseCommand.cs" />
     <Compile Include="FileIO.cs" />
     <Compile Include="FormTerminal.cs">
       <SubType>Form</SubType>
