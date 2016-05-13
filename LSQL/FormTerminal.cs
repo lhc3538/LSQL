@@ -25,8 +25,9 @@ namespace LSQL
             {
                 string result;
                 result = sqlDeal.dealTerminal(textInput.Text);
+                textOutput.AppendText(">" + textInput.Text + ";\r\n");
                 textInput.Clear();
-                textOutput.AppendText(result+"\n");
+                textOutput.AppendText(result+"\r\n");
             }
         }
 

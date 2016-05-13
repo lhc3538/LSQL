@@ -37,20 +37,25 @@ namespace LSQL
                     return showDataBases();
                 }
             }
+            else if (CmdStr[0] == "test")
+            {
+                return fileIO.createFile("lhc","hahaha");
+            }
             return "Unable to identify";
         }
 
         /// <summary>
-        /// 
+        /// 显示所有数据库
         /// </summary>
         /// <returns></returns>
         private string showDataBases()
         {
             string result = "";
-            string[] databases = fileIO.getAllFolder();
-            for (int i=0;i<databases.Length;i++)
+            string[] databasesPath = fileIO.getAllFolder(); //返回所有数据库路径
+            for (int i=0;i<databasesPath.Length;i++)
             {
-                result += databases[i] + "\n";
+                string[] databaseName = databasesPath[i].Split('\\');   //提取最后面的数据库名
+                result += databaseName[databaseName.Length-1] + "\r\n";
             }
             return result;
         }
