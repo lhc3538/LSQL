@@ -41,6 +41,11 @@ namespace LSQL
             return "error:empty name";
         }
 
+        /// <summary>
+        /// 创建文件
+        /// </summary>
+        /// <param name="path">创建位置</param>
+        /// <returns>创建结果</returns>
         public string createFile(string path)
         {
             if (path!="")
@@ -66,12 +71,41 @@ namespace LSQL
         }
 
         /// <summary>
-        /// 获取根目录下所有文件夹名
+        /// 获取指定目录下所有文件夹名
         /// </summary>
-        /// <returns></returns>
+        /// <returns>文件夹名数组</returns>
         public string[] getAllFolder(string path)
         {
-            return Directory.GetDirectories(path);
+            return getAllName(Directory.GetDirectories(path));
+        }
+
+        /// <summary>
+        /// 获取指定目录下所有文件
+        /// </summary>
+        /// <param name="path">指定目录</param>
+        /// <returns>文件名数组</returns>
+        public string[] getAllFile(string path)
+        {
+            return getAllName(Directory.GetFiles(path));
+        }
+
+        /// <summary>
+        /// 从路径数组中提取最后一项重新组成数组
+        /// </summary>
+        /// <param name="allPath">路径数组</param>
+        /// <returns>最后一项的数组</returns>
+        private string[] getAllName(string[] allPath)
+        {
+            string result = "";
+            for (int i = 0; i < allPath.Length; i++)
+            {
+                string[] name = allPath[i].Split('\\');   //提取最后面的数据库名
+                if (i == 0)
+                    result += name[name.Length - 1];
+                else
+                    result += "|" + name[name.Length - 1];
+            }
+            return result.Split('|');
         }
     }
 }

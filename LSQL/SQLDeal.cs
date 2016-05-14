@@ -37,6 +37,10 @@ namespace LSQL
                 {
                     return baseCommand.showDataBases();
                 }
+                else if(CmdStr[1] == "tables")
+                {
+                    return baseCommand.showTables();
+                }
             }
             else if (CmdStr[0] == "use")
             {

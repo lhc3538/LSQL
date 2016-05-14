@@ -41,27 +41,11 @@ namespace LSQL
         /// <returns>判断结果</returns>
         private bool hadExistedDatabase(string name)
         {
-            string[] allDatabase = getAllDatabase();
+            string[] allDatabase = fileIO.getAllFolder(homePath);
             for (int i=0;i<allDatabase.Length;i++)
                 if (allDatabase[i] == name)
                     return true;
             return false;
-        }
-
-        /// <summary>
-        /// 获得所有数据库
-        /// </summary>
-        /// <returns>数据库名字的数组</returns>
-        private string[] getAllDatabase()
-        {
-            string[] databasesPath = fileIO.getAllFolder(homePath); //返回所有数据库路径
-            string result = "";
-            for (int i = 0; i < databasesPath.Length; i++)
-            {
-                string[] databaseName = databasesPath[i].Split('\\');   //提取最后面的数据库名
-                result += databaseName[databaseName.Length - 1] + "|";
-            }
-            return result.Split('|');
         }
 
         /// <summary>
@@ -80,11 +64,7 @@ namespace LSQL
         /// <returns>所有数据库名，换行隔开</returns>
         public string showDataBases()
         {
-            string result = "";
-            string[] databaseName = getAllDatabase(); //返回所有数据库
-            for (int i = 0; i < databaseName.Length; i++)
-                result += databaseName[i] + "\r\n";
-            return result;
+            return formatStringArray(fileIO.getAllFolder(homePath));
         }
 
         /// <summary>
@@ -100,6 +80,36 @@ namespace LSQL
                 return "Please input table name";
             else
                 return fileIO.createFile(homePath + currentDataBase + @"\" + tableName);
+        }
+
+        /// <summary>
+        /// 显示当前数据库所有数据表
+        /// </summary>
+        /// <returns>所有表名，换行隔开</returns>
+        public string showTables()
+        {
+            if (currentDataBase!="")
+                return formatStringArray(fileIO.getAllFile(homePath + currentDataBase));
+            return "Please select database";
+        }
+
+        /// <summary>
+        /// 格式化字符串数组
+        /// 每个字符串之间添加换行
+        /// </summary>
+        /// <param name="strArr">字符串数组</param>
+        /// <returns>格式化后的字符串</returns>
+        protected string formatStringArray(string[] strArr)
+        {
+            string result = "";
+            for (int i = 0; i < strArr.Length; i++)
+            {
+                if (i == 0)
+                    result += strArr[i];
+                else
+                    result += "\r\n" + strArr[i];
+            }
+            return result;
         }
     }
 }
