@@ -46,6 +46,17 @@ namespace LSQL
             {
                 return baseCommand.useDatabase(CmdStr[1]);
             }
+            else if (CmdStr[0] == "drop")
+            {
+                if (CmdStr[1] == "database")
+                {
+                    return baseCommand.dropDatabase(CmdStr[2]);
+                }
+                else if (CmdStr[1] == "table")
+                {
+                    return baseCommand.dropTable(CmdStr[2]);
+                }
+            }
             return "Unable to identify";
         }
     }

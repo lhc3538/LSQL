@@ -107,5 +107,40 @@ namespace LSQL
             }
             return result.Split('|');
         }
+        /// <summary>
+        /// 删除非空文件夹
+        /// </summary>
+        /// <param name="path">要删除的文件夹目录</param>
+        public string deleteDirectory(string path)
+        {
+            DirectoryInfo dir = new DirectoryInfo(path);
+            if (dir.Exists)
+            {
+                DirectoryInfo[] childs = dir.GetDirectories();
+                foreach (DirectoryInfo child in childs)
+                {
+                    child.Delete(true);
+                }
+                dir.Delete(true);
+                return "Delete success";
+            }
+            else
+                return "not exist";
+        }
+
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <returns>删除结果</returns>
+        public string deleteFile(string path)
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                return "Delete succcess";
+            }
+            return "not exist";
+        }
     }
 }

@@ -111,5 +111,32 @@ namespace LSQL
             }
             return result;
         }
+
+        /// <summary>
+        /// 删除数据库
+        /// </summary>
+        /// <param name="name">数据库名</param>
+        /// <returns></returns>
+        public string dropDatabase(string name)
+        {
+            if (name != "")
+                return fileIO.deleteDirectory(homePath + name);
+            return "Please input dabases name";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public string dropTable(string name)
+        {
+            if (name == "")
+                return "Please input table name";
+            else if (currentDataBase == "")
+                return "Please select database";
+            else
+                return fileIO.deleteFile(homePath + currentDataBase + @"\" + name);
+        }
     }
 }
