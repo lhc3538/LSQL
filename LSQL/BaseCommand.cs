@@ -125,7 +125,7 @@ namespace LSQL
         }
 
         /// <summary>
-        /// 
+        /// 删除表
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -137,6 +137,42 @@ namespace LSQL
                 return "Please select database";
             else
                 return fileIO.deleteFile(homePath + currentDataBase + @"\" + name);
+        }
+
+        public string insertRecord(string table,string strline)
+        {
+            return fileIO.appendLine(strline, homePath + currentDataBase + @"\" + table);
+        }
+
+        /// <summary>
+        /// 显示所有记录
+        /// </summary>
+        /// <param name="table">表名</param>
+        /// <returns>格式化后的所有记录</returns>
+        public string showRecords(string table)
+        {
+            string records = "";
+            List<string> list = fileIO.readAllLine(homePath + currentDataBase + @"\" + table);
+            foreach(string line in list)
+            {
+                records += line + "\r\n";
+            }
+            return records;
+        }
+        /// <summary>
+        /// 删除一条记录
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string delRecord(string table,int id)
+        {
+            return fileIO.delLine(homePath + currentDataBase + @"\" + table, id);
+        }
+
+        public string modifyRecord(string table,int id,string linestr)
+        {
+            return fileIO.modifyLine(homePath + currentDataBase + @"\" + table, id, linestr);
         }
     }
 }

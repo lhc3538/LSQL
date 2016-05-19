@@ -142,5 +142,139 @@ namespace LSQL
             }
             return "not exist";
         }
+
+        /// <summary>
+        /// 读取所有行
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <returns>所有行列表</returns>
+        public List<string> readAllLine(string path)
+        {
+            return new List<string>(File.ReadLines(path));
+        }
+
+        /// <summary>
+        /// 文件尾追加行
+        /// </summary>
+        /// <param name="strline">追加内容</param>
+        /// <param name="path">文件路径</param>
+        /// <returns>操作结果</returns>
+        public string appendLine(string strline,string path)
+        {
+            FileStream fs = null;
+            //将待写的入数据从字符串转换为字节数组  
+            Encoding encoder = Encoding.UTF8;
+            byte[] bytes = encoder.GetBytes(strline+ "\r\n");
+            try
+            {
+                fs = File.OpenWrite(path);
+                //设定书写的开始位置为文件的末尾  
+                fs.Position = fs.Length;
+                //将待写入内容追加到文件末尾  
+                fs.Write(bytes, 0, bytes.Length);
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+            finally
+            {
+                fs.Close();
+            }
+            return "success";
+        }
+
+        /// <summary>
+        /// 在文件尾追加多行
+        /// </summary>
+        /// <param name="strlist">字符串列表</param>
+        /// <param name="path">文件路径</param>
+        /// <returns>操作结果</returns>
+        public string appendAllLine(List<string>strlist,string path)
+        {
+            FileStream fs = null;
+            //将待写的入数据从字符串转换为字节数组  
+            Encoding encoder = Encoding.UTF8;
+            fs = File.OpenWrite(path);
+            try
+            {
+                foreach (string line in strlist)
+                {
+                    byte[] bytes = encoder.GetBytes(line + "\r\n");
+                    //设定书写的开始位置为文件的末尾  
+                    fs.Position = fs.Length;
+                    //将待写入内容追加到文件末尾  
+                    fs.Write(bytes, 0, bytes.Length);
+                    fs.Flush();
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+            finally
+            {
+                fs.Close();
+            }
+            return "success";
+        }
+        /// <summary>
+        /// 从头重写文件
+        /// </summary>
+        /// <param name="strlist">数据列表</param>
+        /// <param name="path">文件路径</param>
+        /// <returns>操作结果</returns>
+        public string writeAllLine(List<string> strlist, string path)
+        {
+            FileStream fs = null;
+            //将待写的入数据从字符串转换为字节数组  
+            Encoding encoder = Encoding.UTF8;
+            fs = File.OpenWrite(path);
+            try
+            {
+                foreach (string line in strlist)
+                {
+                    byte[] bytes = encoder.GetBytes(line + "\r\n");
+                    //将待写入内容追加到文件末尾  
+                    fs.Write(bytes, 0, bytes.Length);
+                    fs.Flush();
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+            finally
+            {
+                fs.Close();
+            }
+            return "success";
+        }
+        /// <summary>
+        /// 删除文件某一行
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <param name="id">行号，从0开始</param>
+        /// <returns>操作结果</returns>
+        public string delLine(string path,int id)
+        {
+            List<string> lines = readAllLine(path);
+            lines.RemoveAt(id);
+            return writeAllLine(lines, path);
+        }
+
+        /// <summary>
+        /// 修改某一行
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <param name="id">行号，从0开始</param>
+        /// <param name="linestr">一行数据</param>
+        /// <returns>操作结果</returns>
+        public string modifyLine(string path,int id,string linestr)
+        {
+            List<string> lines = readAllLine(path);
+            lines[id] = linestr;
+            return writeAllLine(lines, path);
+        }
     }
 }
