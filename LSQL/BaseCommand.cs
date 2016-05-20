@@ -64,7 +64,17 @@ namespace LSQL
         /// <returns>所有数据库名，换行隔开</returns>
         public string showDataBases()
         {
-            return formatStringArray(fileIO.getAllFolder(homePath));
+            return formatStringArray(getDataBases().ToArray());
+        }
+
+        public List<string> getDataBases()
+        {
+            List<string> databases = new List<string>();
+            string[] folders = fileIO.getAllFolder(homePath);
+            for (int i=0;i<folders.Length;i++)
+                if (folders[i].ElementAt(0) != '.')
+                    databases.Add(folders[i]);
+            return databases;
         }
 
         /// <summary>
@@ -162,14 +172,21 @@ namespace LSQL
         /// <summary>
         /// 删除一条记录
         /// </summary>
-        /// <param name="table"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="table">表名</param>
+        /// <param name="id">行号，从0开始</param>
+        /// <returns>操作结果</returns>
         public string delRecord(string table,int id)
         {
             return fileIO.delLine(homePath + currentDataBase + @"\" + table, id);
         }
 
+        /// <summary>
+        /// 修改一条数据
+        /// </summary>
+        /// <param name="table">表名</param>
+        /// <param name="id">行号，从0开始</param>
+        /// <param name="linestr">一条数据</param>
+        /// <returns>操作结果</returns>
         public string modifyRecord(string table,int id,string linestr)
         {
             return fileIO.modifyLine(homePath + currentDataBase + @"\" + table, id, linestr);
