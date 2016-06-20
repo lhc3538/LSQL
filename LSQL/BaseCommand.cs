@@ -10,7 +10,8 @@ namespace LSQL
     {
         private string homePath;  //DBMS根目录
         private FileIO fileIO;  //具体数据库操作类
-        private string currentDataBase;   //当前数据库
+        private static string currentDataBase;   //当前数据库
+        private char colSeparator = (char)2;    //列间分隔符
 
         public BaseCommand()
         {
@@ -55,7 +56,12 @@ namespace LSQL
         /// <returns>创建结果</returns>
         public string createDataBase(string name)
         {
-            return fileIO.createFolder(homePath + name);
+            string result_database = fileIO.createFolder(homePath + name);
+            string result_dict = fileIO.createFolder(homePath + "." + name);
+            if (result_database.Equals("success") && result_dict.Equals("success"))
+                return "success";
+            else
+                return result_database + "\r\n" + result_dict;
         }
 
         /// <summary>
@@ -67,6 +73,10 @@ namespace LSQL
             return formatStringArray(getDataBases().ToArray());
         }
 
+        /// <summary>
+        /// 获取所有数据库
+        /// </summary>
+        /// <returns></returns>
         public List<string> getDataBases()
         {
             List<string> databases = new List<string>();
@@ -89,7 +99,14 @@ namespace LSQL
             else if (tableName == "")
                 return "Please input table name";
             else
-                return fileIO.createFile(homePath + currentDataBase + @"\" + tableName);
+            {
+                string result_database = fileIO.createFile(homePath + currentDataBase + @"\" + tableName);
+                string result_dict = fileIO.createFile(homePath + "." + currentDataBase + @"\" + tableName);
+                if (result_database.Equals("success") && result_dict.Equals("success"))
+                    return "success";
+                else
+                    return result_database + "\r\n" + result_dict;
+            }
         }
 
         /// <summary>
@@ -101,6 +118,21 @@ namespace LSQL
             if (currentDataBase!="")
                 return formatStringArray(fileIO.getAllFile(homePath + currentDataBase));
             return "Please select database";
+        }
+
+        /// <summary>
+        /// 显示当前数据库所有数据表
+        /// </summary>
+        /// <returns>表名列表</returns>
+        public List<string> getTables()
+        {
+            string[] files = fileIO.getAllFile(homePath + currentDataBase);
+            List<string> list = new List<string>();
+            foreach(string name in files)
+            {
+                list.Add(name);
+            }
+            return list;
         }
 
         /// <summary>
@@ -130,7 +162,14 @@ namespace LSQL
         public string dropDatabase(string name)
         {
             if (name != "")
-                return fileIO.deleteDirectory(homePath + name);
+            {
+                string rul_database = fileIO.deleteDirectory(homePath + name);
+                string rul_dict = fileIO.deleteDirectory(homePath + "." + name);
+                if (rul_database.Equals("success") && rul_dict.Equals("success"))
+                    return "success";
+                else
+                    return rul_database + "\r\n" + rul_dict;
+            }
             return "Please input dabases name";
         }
 
@@ -146,9 +185,22 @@ namespace LSQL
             else if (currentDataBase == "")
                 return "Please select database";
             else
-                return fileIO.deleteFile(homePath + currentDataBase + @"\" + name);
+            {
+                string rul_database = fileIO.deleteFile(homePath + currentDataBase + @"\" + name);
+                string rul_dict = fileIO.deleteFile(homePath + "." + currentDataBase + @"\" + name);
+                if (rul_database.Equals("success") && rul_dict.Equals("success"))
+                    return "success";
+                else
+                    return rul_database + "\r\n" + rul_dict;
+            }
         }
 
+        /// <summary>
+        /// 添加一条记录
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="strline"></param>
+        /// <returns></returns>
         public string insertRecord(string table,string strline)
         {
             return fileIO.appendLine(strline, homePath + currentDataBase + @"\" + table);
@@ -169,6 +221,7 @@ namespace LSQL
             }
             return records;
         }
+
         /// <summary>
         /// 删除一条记录
         /// </summary>
@@ -190,6 +243,66 @@ namespace LSQL
         public string modifyRecord(string table,int id,string linestr)
         {
             return fileIO.modifyLine(homePath + currentDataBase + @"\" + table, id, linestr);
+        }
+
+        /// <summary>
+        /// 添加列
+        /// </summary>
+        /// <param name="table_name">表名</param>
+        /// <param name="col_name">列名</param>
+        /// <param name="type">数据类型</param>
+        /// <param name="constraint">约束</param>
+        /// <returns></returns>
+        public string addCol(string table_name,string col_name,string type,string constraint)
+        {
+            //在数据字典中添加属性
+            string str_line = col_name + colSeparator + type + colSeparator + constraint;
+            fileIO.appendLine(str_line, homePath + "." + currentDataBase + @"\" + table_name);
+            //在实际表中添加一空列
+            List<string> lines = fileIO.readAllLine(homePath + currentDataBase + @"\" + table_name);
+            for (int i=0;i<lines.Count;i++)
+                lines[i] += colSeparator;
+            fileIO.writeAllLine(lines, homePath + currentDataBase + @"\" + table_name);
+            return "success";
+        }
+
+        /// <summary>
+        /// 删除列
+        /// </summary>
+        /// <param name="table_name">表名</param>
+        /// <param name="col_name">列名</param>
+        /// <returns></returns>
+        public string delCol(string table_name,string col_name)
+        {
+            List<string> lines,new_lines;
+            int id = -1;    //列的id
+            //删除字典中的属性，并找到列id
+            lines = fileIO.readAllLine(homePath + "." + currentDataBase + @"\" + table_name);
+            new_lines = new List<string>();
+            for (int i=0;i<lines.Count;i++)
+            {
+                string[] element = lines[i].Split(colSeparator);
+                if (element[0].Equals(col_name))
+                {
+                    id = i;
+                    continue;
+                }
+                new_lines.Add(lines[i]);
+            }
+            fileIO.writeAllLine(new_lines, homePath + "." + currentDataBase + @"\" + table_name);
+            
+            if (id == -1)
+                return "Col name not found";
+            //删除表中的对应列
+            lines = fileIO.readAllLine(homePath + currentDataBase + @"\" + table_name);
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string[] element = lines[i].Split(colSeparator);
+                element = DataUtil.removeStringArrayElement(element, id);   //删除对应列
+                lines[i] = DataUtil.combineStringArrayInsertChar(element, colSeparator);    //合并删除后的数组，保存
+            }
+            fileIO.writeAllLine(lines, homePath + currentDataBase + @"\" + table_name);
+            return "success";
         }
     }
 }

@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="BaseCommand.cs" />
     <Compile Include="ComCreate.cs" />
-    <Compile Include="DataDict.cs" />
+    <Compile Include="DataUtil.cs" />
     <Compile Include="FileIO.cs" />
     <Compile Include="FormTerminal.cs">
       <SubType>Form</SubType>

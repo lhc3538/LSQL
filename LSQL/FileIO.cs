@@ -56,7 +56,8 @@ namespace LSQL
                     if (!File.Exists(path))
                     {
                         // Create the file it does not exist.
-                        File.Create(path);
+                        //加锁
+                        using (File.Create(path))
                         return "success";
                     }
                     else
@@ -122,10 +123,10 @@ namespace LSQL
                     child.Delete(true);
                 }
                 dir.Delete(true);
-                return "Delete success";
+                return "success";
             }
             else
-                return "not exist";
+                return "error:not exist";
         }
 
         /// <summary>

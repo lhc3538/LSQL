@@ -9,6 +9,7 @@ namespace LSQL
     class SQLDeal
     {
         private BaseCommand baseCommand;
+       
         public SQLDeal()
         {
             baseCommand = new BaseCommand();
@@ -78,6 +79,10 @@ namespace LSQL
             else if (CmdStr[0] == "update")
             {
                 return baseCommand.modifyRecord("table1", 3, "MLGB");
+            }
+            else if (CmdStr[0] == "getstring")
+            {
+                return DataUtil.getStringFromBracket(str);
             }
             return "Unable to identify";
         }
