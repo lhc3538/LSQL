@@ -47,7 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseCommand.cs" />
+    <Compile Include="ComAlter.cs" />
     <Compile Include="ComCreate.cs" />
+    <Compile Include="ComInsert.cs" />
+    <Compile Include="DataDict.cs" />
     <Compile Include="DataUtil.cs" />
     <Compile Include="FileIO.cs" />
     <Compile Include="FormTerminal.cs">

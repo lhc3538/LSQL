@@ -38,7 +38,7 @@ namespace LSQL
                 if (i == 0)
                     result = array[i];
                 else
-                    result += (array[i] + separator);
+                    result += (separator + array[i]);
             }
             return result;
         }
@@ -61,6 +61,24 @@ namespace LSQL
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// 判断字符串是否为int
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool isInt(string str)
+        {
+            bool isnum = Regex.IsMatch(str, @"^\d+$");
+            return isnum;
+        }
+
+        public static bool isDouble(string str)
+        {
+            double temp;
+            bool isdouble = Double.TryParse(str,out temp);
+            return isdouble;
         }
     }
 }

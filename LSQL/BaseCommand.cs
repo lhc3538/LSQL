@@ -10,13 +10,12 @@ namespace LSQL
     {
         private string homePath;  //DBMS根目录
         private FileIO fileIO;  //具体数据库操作类
-        private static string currentDataBase;   //当前数据库
-        private char colSeparator = (char)2;    //列间分隔符
+        private static string currentDataBase = "";   //当前数据库
+        public static char colSeparator = (char)2;    //列间分隔符
 
         public BaseCommand()
         {
             fileIO = new FileIO();
-            currentDataBase = "";
             homePath = @"c:\LSQL\";
         }
 
@@ -56,8 +55,8 @@ namespace LSQL
         /// <returns>创建结果</returns>
         public string createDataBase(string name)
         {
-            string result_database = fileIO.createFolder(homePath + name);
-            string result_dict = fileIO.createFolder(homePath + "." + name);
+            string result_database = fileIO.createFolder(homePath + name);  //创建数据库
+            string result_dict = fileIO.createFile(homePath + "." + name);  //创建数据库对应的数据字典
             if (result_database.Equals("success") && result_dict.Equals("success"))
                 return "success";
             else
@@ -100,8 +99,8 @@ namespace LSQL
                 return "Please input table name";
             else
             {
-                string result_database = fileIO.createFile(homePath + currentDataBase + @"\" + tableName);
-                string result_dict = fileIO.createFile(homePath + "." + currentDataBase + @"\" + tableName);
+                string result_database = fileIO.createFile(homePath + currentDataBase + @"\" + tableName);  //创建数据表
+                string result_dict = fileIO.createFile(homePath + currentDataBase + @"\." + tableName); //创建数据表对应的数据字典
                 if (result_database.Equals("success") && result_dict.Equals("success"))
                     return "success";
                 else
@@ -164,7 +163,7 @@ namespace LSQL
             if (name != "")
             {
                 string rul_database = fileIO.deleteDirectory(homePath + name);
-                string rul_dict = fileIO.deleteDirectory(homePath + "." + name);
+                string rul_dict = fileIO.deleteFile(homePath + "." + name);
                 if (rul_database.Equals("success") && rul_dict.Equals("success"))
                     return "success";
                 else
@@ -187,7 +186,7 @@ namespace LSQL
             else
             {
                 string rul_database = fileIO.deleteFile(homePath + currentDataBase + @"\" + name);
-                string rul_dict = fileIO.deleteFile(homePath + "." + currentDataBase + @"\" + name);
+                string rul_dict = fileIO.deleteFile(homePath + currentDataBase + @"\." + name);
                 if (rul_database.Equals("success") && rul_dict.Equals("success"))
                     return "success";
                 else
@@ -204,6 +203,18 @@ namespace LSQL
         public string insertRecord(string table,string strline)
         {
             return fileIO.appendLine(strline, homePath + currentDataBase + @"\" + table);
+        }
+        public string insertRecord(string table,string[] str_ele)
+        {
+            string allstr = "";
+            for (int i=0;i<str_ele.Length;i++)
+            {
+                if (i == 0)
+                    allstr = str_ele[0];
+                else
+                    allstr += (colSeparator + str_ele[i]);
+            }
+            return fileIO.appendLine(allstr, homePath + currentDataBase + @"\" + table);
         }
 
         /// <summary>
@@ -253,15 +264,20 @@ namespace LSQL
         /// <param name="type">数据类型</param>
         /// <param name="constraint">约束</param>
         /// <returns></returns>
-        public string addCol(string table_name,string col_name,string type,string constraint)
+        public string addCol(string table_name,string dict)
         {
-            //在数据字典中添加属性
-            string str_line = col_name + colSeparator + type + colSeparator + constraint;
-            fileIO.appendLine(str_line, homePath + "." + currentDataBase + @"\" + table_name);
-            //在实际表中添加一空列
             List<string> lines = fileIO.readAllLine(homePath + currentDataBase + @"\" + table_name);
-            for (int i=0;i<lines.Count;i++)
-                lines[i] += colSeparator;
+            //添加属性
+            if (lines.Count == 0)   //文件为空
+            {
+                lines.Add(dict);
+            }
+            else//文件非空
+            {
+                lines[0] += (colSeparator + dict);
+                for (int i=1;i<lines.Count;i++)
+                    lines[i] += colSeparator;   //在实际表中添加一空列
+            }
             fileIO.writeAllLine(lines, homePath + currentDataBase + @"\" + table_name);
             return "success";
         }
@@ -274,27 +290,24 @@ namespace LSQL
         /// <returns></returns>
         public string delCol(string table_name,string col_name)
         {
-            List<string> lines,new_lines;
             int id = -1;    //列的id
-            //删除字典中的属性，并找到列id
-            lines = fileIO.readAllLine(homePath + "." + currentDataBase + @"\" + table_name);
-            new_lines = new List<string>();
-            for (int i=0;i<lines.Count;i++)
+            //删除表头的属性，并找到列id
+            string str_head = getHeadData(table_name);
+            string[] str_col = str_head.Split(colSeparator);
+            for (int i=0;i<str_col.Length;i++)
             {
-                string[] element = lines[i].Split(colSeparator);
+                string[] element = str_col[i].Split(' ');
                 if (element[0].Equals(col_name))
                 {
                     id = i;
-                    continue;
+                    break;
                 }
-                new_lines.Add(lines[i]);
             }
-            fileIO.writeAllLine(new_lines, homePath + "." + currentDataBase + @"\" + table_name);
             
             if (id == -1)
                 return "Col name not found";
             //删除表中的对应列
-            lines = fileIO.readAllLine(homePath + currentDataBase + @"\" + table_name);
+            List<string> lines = fileIO.readAllLine(homePath + currentDataBase + @"\" + table_name);
             for (int i = 0; i < lines.Count; i++)
             {
                 string[] element = lines[i].Split(colSeparator);
@@ -303,6 +316,16 @@ namespace LSQL
             }
             fileIO.writeAllLine(lines, homePath + currentDataBase + @"\" + table_name);
             return "success";
+        }
+
+        /// <summary>
+        /// 获取表头
+        /// </summary>
+        /// <param name="table_name"></param>
+        /// <returns></returns>
+        public string getHeadData(string table_name)
+        {
+            return fileIO.readLine(homePath + currentDataBase + @"\" + table_name, 0);
         }
     }
 }

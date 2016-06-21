@@ -9,10 +9,15 @@ namespace LSQL
     class SQLDeal
     {
         private BaseCommand baseCommand;
-       
+        private ComCreate comCreate;
+        private ComAlter comAlter;
+        private ComInsert comInsert;
         public SQLDeal()
         {
             baseCommand = new BaseCommand();
+            comCreate = new ComCreate();
+            comAlter = new ComAlter();
+            comInsert = new ComInsert();
         }
         /// <summary>
         /// 终端指令处理函数
@@ -23,14 +28,15 @@ namespace LSQL
             string[] CmdStr = str.Split(' ');
             if (CmdStr[0] == "create")
             {
-                if (CmdStr[1] == "database")
-                {
-                    return baseCommand.createDataBase(CmdStr[2]);
-                }
-                else if (CmdStr[1] == "table")
-                {
-                    return baseCommand.createTable(CmdStr[2]);
-                }
+                return comCreate.dealCom(str);
+                //if (CmdStr[1] == "database")
+                //{
+                //    return baseCommand.createDataBase(CmdStr[2]);
+                //}
+                //else if (CmdStr[1] == "table")
+                //{
+                //    return baseCommand.createTable(CmdStr[2]);
+                //}
             }
             else if (CmdStr[0] == "show")
             {
@@ -60,7 +66,7 @@ namespace LSQL
             }
             else if (CmdStr[0] == "insert")
             {
-                return baseCommand.insertRecord(CmdStr[1], CmdStr[2]);
+                return comInsert.dealCom(str);
             }
             else if (CmdStr[0] == "select")
             {
@@ -71,6 +77,10 @@ namespace LSQL
                         return baseCommand.showRecords(CmdStr[3]);
                     }
                 }
+            }
+            else if (CmdStr[0] == "alter")
+            {
+                return comAlter.dealCom(str);
             }
             else if (CmdStr[0] == "delete")
             {

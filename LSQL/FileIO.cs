@@ -165,7 +165,7 @@ namespace LSQL
             FileStream fs = null;
             //将待写的入数据从字符串转换为字节数组  
             Encoding encoder = Encoding.UTF8;
-            byte[] bytes = encoder.GetBytes(strline+ "\r\n");
+            byte[] bytes = encoder.GetBytes(strline);
             try
             {
                 fs = File.OpenWrite(path);
@@ -231,6 +231,7 @@ namespace LSQL
             //将待写的入数据从字符串转换为字节数组  
             Encoding encoder = Encoding.UTF8;
             fs = File.OpenWrite(path);
+            fs.SetLength(0);    //清空文件
             try
             {
                 foreach (string line in strlist)
@@ -251,6 +252,19 @@ namespace LSQL
             }
             return "success";
         }
+
+        /// <summary>
+        /// 返回某一行数据
+        /// </summary>
+        /// <param name="path">文件路径</param>
+        /// <param name="id">行号</param>
+        /// <returns></returns>
+        public string readLine(string path,int id)
+        {
+            List<string> lines = readAllLine(path);
+            return lines[id];
+        }
+
         /// <summary>
         /// 删除文件某一行
         /// </summary>
