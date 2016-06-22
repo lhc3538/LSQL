@@ -63,7 +63,9 @@ namespace LSQL
         /// <returns></returns>
         public string createTable(string name,string dict)
         {
-            baseCom.createTable(name);  //创建空表
+            string rult = baseCom.createTable(name);  //创建空表
+            if (rult != "success")
+                return rult;
             if (dict != "") //创建初始要求列
             {
                 string[] str_col = dict.Split(',');

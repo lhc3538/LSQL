@@ -274,9 +274,13 @@ namespace LSQL
             }
             else//文件非空
             {
-                lines[0] += (colSeparator + dict);
+                if (lines[0]!="")
+                    lines[0] += (colSeparator + dict);
                 for (int i=1;i<lines.Count;i++)
+                {
+                    if (lines[i]!="")
                     lines[i] += colSeparator;   //在实际表中添加一空列
+                }      
             }
             fileIO.writeAllLine(lines, homePath + currentDataBase + @"\" + table_name);
             return "success";
@@ -316,6 +320,50 @@ namespace LSQL
             }
             fileIO.writeAllLine(lines, homePath + currentDataBase + @"\" + table_name);
             return "success";
+        }
+
+        /// <summary>
+        /// 找到某值所在位置
+        /// </summary>
+        /// <param name="table_name">表名</param>
+        /// <param name="col_name">列名</param>
+        /// <param name="col_value">列值</param>
+        /// <returns></returns>
+        public int findPos(string table_name,string col_name,string col_value)
+        {
+            string[] head_ele = getHeadData(table_name).Split(colSeparator);
+            int col_id = -1;
+            for (int i=0;i<head_ele.Length;i++)
+            {
+                string[] ele = head_ele[i].Split(' ');
+                if (ele[0] == col_name)
+                {
+                    col_id = i;
+                    break;
+                }
+            }
+            if (col_id == -1)
+                return -1;
+            List<string> all_value = readCol(table_name, col_id);
+            return all_value.IndexOf(col_value);
+        }
+
+        /// <summary>
+        /// 读取一列
+        /// </summary>
+        /// <param name="table_name">表名</param>
+        /// <param name="col_id">列号</param>
+        /// <returns></returns>
+        public List<string> readCol(string table_name,int col_id)
+        {
+            List<string> lines = fileIO.readAllLine(homePath + currentDataBase + @"\" + table_name);
+            List<string> result = new List<string>();
+            for (int i=0;i<lines.Count;i++)
+            {
+                string[] ele = lines[i].Split(colSeparator);
+                result.Add(ele[col_id]);
+            }
+            return result;
         }
 
         /// <summary>

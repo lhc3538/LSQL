@@ -162,26 +162,10 @@ namespace LSQL
         /// <returns>操作结果</returns>
         public string appendLine(string strline,string path)
         {
-            FileStream fs = null;
-            //将待写的入数据从字符串转换为字节数组  
-            Encoding encoder = Encoding.UTF8;
-            byte[] bytes = encoder.GetBytes(strline);
-            try
-            {
-                fs = File.OpenWrite(path);
-                //设定书写的开始位置为文件的末尾  
-                fs.Position = fs.Length;
-                //将待写入内容追加到文件末尾  
-                fs.Write(bytes, 0, bytes.Length);
-            }
-            catch (Exception ex)
-            {
-                return ex.ToString();
-            }
-            finally
-            {
-                fs.Close();
-            }
+            string temp_str = strline.Replace("\r\n", "");
+            StreamWriter sw = new StreamWriter(path, true);
+            sw.Write("\r\n" + temp_str);
+            sw.Close();
             return "success";
         }
 
@@ -234,13 +218,16 @@ namespace LSQL
             fs.SetLength(0);    //清空文件
             try
             {
-                foreach (string line in strlist)
+                for (int i=0;i<strlist.Count;i++)
                 {
-                    byte[] bytes = encoder.GetBytes(line + "\r\n");
-                    //将待写入内容追加到文件末尾  
+                    byte[] bytes;
+                    if (i == 0)
+                        bytes = encoder.GetBytes(strlist[i]);
+                    else
+                        bytes = encoder.GetBytes("\r\n" + strlist[i]);
                     fs.Write(bytes, 0, bytes.Length);
                     fs.Flush();
-                }
+                }//将待写入内容追加到文件末尾  
             }
             catch (Exception ex)
             {

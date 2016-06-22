@@ -49,6 +49,7 @@
     <Compile Include="BaseCommand.cs" />
     <Compile Include="ComAlter.cs" />
     <Compile Include="ComCreate.cs" />
+    <Compile Include="ComDelete.cs" />
     <Compile Include="ComInsert.cs" />
     <Compile Include="DataDict.cs" />
     <Compile Include="DataUtil.cs" />

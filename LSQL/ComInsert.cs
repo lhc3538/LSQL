@@ -16,7 +16,7 @@ namespace LSQL
         public string dealCom(string cmdstr)
         {
             string[] ele = cmdstr.Split(' ');
-            tableName = ele[1];
+            tableName = ele[2];
             lineStr = DataUtil.getStringFromBracket(cmdstr);
             colEle = lineStr.Split(',');
             

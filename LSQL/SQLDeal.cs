@@ -12,12 +12,14 @@ namespace LSQL
         private ComCreate comCreate;
         private ComAlter comAlter;
         private ComInsert comInsert;
+        private ComDelete comDelete;
         public SQLDeal()
         {
             baseCommand = new BaseCommand();
             comCreate = new ComCreate();
             comAlter = new ComAlter();
             comInsert = new ComInsert();
+            comDelete = new ComDelete();
         }
         /// <summary>
         /// 终端指令处理函数
@@ -84,7 +86,7 @@ namespace LSQL
             }
             else if (CmdStr[0] == "delete")
             {
-                return baseCommand.delRecord("table1", 3);
+                return comDelete.dealCom(str);
             }
             else if (CmdStr[0] == "update")
             {
