@@ -185,7 +185,8 @@ namespace LSQL
             {
                 foreach (string line in strlist)
                 {
-                    byte[] bytes = encoder.GetBytes(line + "\r\n");
+                    string temp_line = line.Replace("\r\n", "");
+                    byte[] bytes = encoder.GetBytes("\r\n" + temp_line);
                     //设定书写的开始位置为文件的末尾  
                     fs.Position = fs.Length;
                     //将待写入内容追加到文件末尾  
@@ -220,11 +221,12 @@ namespace LSQL
             {
                 for (int i=0;i<strlist.Count;i++)
                 {
+                    string temp_line = strlist[i].Replace("\r\n", "");
                     byte[] bytes;
                     if (i == 0)
-                        bytes = encoder.GetBytes(strlist[i]);
+                        bytes = encoder.GetBytes(temp_line);
                     else
-                        bytes = encoder.GetBytes("\r\n" + strlist[i]);
+                        bytes = encoder.GetBytes("\r\n" + temp_line);
                     fs.Write(bytes, 0, bytes.Length);
                     fs.Flush();
                 }//将待写入内容追加到文件末尾  

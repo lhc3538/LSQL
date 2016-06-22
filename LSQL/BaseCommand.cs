@@ -367,6 +367,22 @@ namespace LSQL
         }
 
         /// <summary>
+        /// 获取所有记录
+        /// </summary>
+        /// <param name="table_name"></param>
+        /// <returns></returns>
+        public List<string[]> getAllRecord(string table_name)
+        {
+            List<string[]> result = new List<string[]>();
+            List<string> all_record = fileIO.readAllLine(homePath + currentDataBase + @"\" + table_name);
+            for (int i=1;i<all_record.Count;i++)
+            {
+                result.Add(all_record[i].Split(colSeparator));
+            }
+            return result;
+        }
+
+        /// <summary>
         /// 获取表头
         /// </summary>
         /// <param name="table_name"></param>
@@ -375,5 +391,23 @@ namespace LSQL
         {
             return fileIO.readLine(homePath + currentDataBase + @"\" + table_name, 0);
         }
+
+        /// <summary>
+        /// 返回所有列名
+        /// </summary>
+        /// <param name="table_name"></param>
+        /// <returns></returns>
+        public List<string> getColName(string table_name)
+        {
+            List<string> result = new List<string>();
+            string head_data = getHeadData(table_name);
+            string[] col_ele = head_data.Split(colSeparator);
+            for (int i=0;i<col_ele.Length;i++)
+            {
+                string[] ele = col_ele[i].Split(' ');
+                result.Add(ele[0]);
+            }
+            return result;
+        } 
     }
 }

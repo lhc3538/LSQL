@@ -7,3 +7,4 @@ J:\C#\LSQL\LSQL\LSQL\obj\Debug\LSQL.Properties.Resources.resources
 J:\C#\LSQL\LSQL\LSQL\obj\Debug\LSQL.csproj.GenerateResource.Cache
 J:\C#\LSQL\LSQL\LSQL\obj\Debug\LSQL.exe
 J:\C#\LSQL\LSQL\LSQL\obj\Debug\LSQL.pdb
+J:\C#\LSQL\LSQL\LSQL\obj\Debug\LSQL.FormLogin.resources

@@ -13,6 +13,7 @@ namespace LSQL
         private ComAlter comAlter;
         private ComInsert comInsert;
         private ComDelete comDelete;
+        private ComSelect comSelect;
         public SQLDeal()
         {
             baseCommand = new BaseCommand();
@@ -20,6 +21,16 @@ namespace LSQL
             comAlter = new ComAlter();
             comInsert = new ComInsert();
             comDelete = new ComDelete();
+            comSelect = new ComSelect();
+        }
+        /// <summary>
+        /// 查询语句单独处理
+        /// </summary>
+        /// <param name="comstr"></param>
+        /// <returns></returns>
+        public List<string[]> dealSelect(string comstr)
+        {
+            return comSelect.dealCom(comstr);
         }
         /// <summary>
         /// 终端指令处理函数
@@ -69,16 +80,6 @@ namespace LSQL
             else if (CmdStr[0] == "insert")
             {
                 return comInsert.dealCom(str);
-            }
-            else if (CmdStr[0] == "select")
-            {
-                if (CmdStr[1] == "*")
-                {
-                    if (CmdStr[2] == "from")
-                    {
-                        return baseCommand.showRecords(CmdStr[3]);
-                    }
-                }
             }
             else if (CmdStr[0] == "alter")
             {
