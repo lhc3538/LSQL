@@ -21,7 +21,7 @@ namespace LSQL
             colEle = lineStr.Split(',');
             //权限检测
             bool hasPer = (new JudgePermission()).hasPermission(
-                baseCom.getCurrentUser(), tableName, "insert");
+                BaseCommand.getCurrentUser(), tableName, "insert");
             if (!hasPer)
                 return "Permission Denied";
 

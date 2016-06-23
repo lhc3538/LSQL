@@ -23,7 +23,7 @@ namespace LSQL
             string nvalue = com_ele[5];
             //权限检测
             bool hasPer = (new JudgePermission()).hasPermission(
-                baseCom.getCurrentUser(), tableName, "update");
+                BaseCommand.getCurrentUser(), tableName, "update");
             if (!hasPer)
                 return "Permission Denied";
 

@@ -21,7 +21,7 @@ namespace LSQL
             colValue = ele[6];
             //权限检测
             bool hasPer = (new JudgePermission()).hasPermission(
-                baseCom.getCurrentUser(), tableName, "delete");
+                BaseCommand.getCurrentUser(), tableName, "delete");
             if (!hasPer)
                 return "Permission Denied";
 

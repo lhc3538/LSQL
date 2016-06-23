@@ -12,6 +12,7 @@ namespace LSQL
     class ComCreate
     {
         private BaseCommand baseCom;    //基本操作指令类
+        private FileIO fileIO = new FileIO();
         private class Creater
         {
             public string module = "";  //数据库还是数据表
@@ -53,6 +54,11 @@ namespace LSQL
                 dataCreator.dict = DataUtil.getStringFromBracket(comstr);//正则匹配出括号内的内容
                 return createTable(dataCreator.module_name,dataCreator.dict);
             }
+            else if (dataCreator.module.Equals("view")) //创建视图
+            {
+                string[] str_select = DataUtil.splitString(comstr, "as ");   //按照as拆分
+                return createView(dataCreator.module_name, str_select[1]);
+            }
             return "success";
         }
         /// <summary>
@@ -60,9 +66,11 @@ namespace LSQL
         /// </summary>
         /// <param name="table_name"></param>
         /// <returns></returns>
-        public string createView(string table_name)
+        public string createView(string view_name,string str_select)
         {
-
+            string line = view_name + BaseCommand.colSeparator + str_select;
+            string path = BaseCommand.getHomePaht() + "." + BaseCommand.getCurrentDataBase();
+            fileIO.appendLine(line, path);
             return "success";
         }
         /// <summary>

@@ -44,6 +44,20 @@ namespace LSQL
         }
 
         /// <summary>
+        /// 用字符串分割字符串
+        /// </summary>
+        /// <param name="str">被分割串</param>
+        /// <param name="separator">分割标志串</param>
+        /// <returns></returns>
+        public static string[] splitString(string str,string separator)
+        {
+            string[] result;
+            str = str.Replace(separator, BaseCommand.colSeparator.ToString());
+            result = str.Split(BaseCommand.colSeparator);
+            return result;
+        }
+
+        /// <summary>
         /// 提取括号中的内容
         /// </summary>
         /// <param name="str"></param>
@@ -74,6 +88,11 @@ namespace LSQL
             return isnum;
         }
 
+        /// <summary>
+        /// 判断字符串是否为double
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static bool isDouble(string str)
         {
             double temp;

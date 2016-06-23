@@ -19,7 +19,7 @@ namespace LSQL
             tableName = com_ele[3];
             //权限检测
             bool hasPer = (new JudgePermission()).hasPermission(
-                baseCom.getCurrentUser(), tableName, "insert");
+                BaseCommand.getCurrentUser(), tableName, "insert");
             if (!hasPer)
                 return new DataTable();
 

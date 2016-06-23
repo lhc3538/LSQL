@@ -9,7 +9,7 @@ namespace LSQL
 {
     class BaseCommand
     {
-        private string homePath;  //DBMS根目录
+        private static string homePath;  //DBMS根目录
         private FileIO fileIO;  //具体数据库操作类
         private static string currentDataBase = "";   //当前数据库
         private static string currentUser = ""; //当前用户
@@ -53,11 +53,26 @@ namespace LSQL
         /// 获取当前用户
         /// </summary>
         /// <returns></returns>
-        public string getCurrentUser()
+        public static string getCurrentUser()
         {
             return currentUser;
         }
-
+        /// <summary>
+        /// 获取根目录
+        /// </summary>
+        /// <returns></returns>
+        public static string getHomePaht()
+        {
+            return homePath;
+        }
+        /// <summary>
+        /// 获取当前数据库名
+        /// </summary>
+        /// <returns></returns>
+        public static string getCurrentDataBase()
+        {
+            return currentDataBase;
+        }
         /// <summary>
         /// 获取数据库所有用户名密码
         /// </summary>
