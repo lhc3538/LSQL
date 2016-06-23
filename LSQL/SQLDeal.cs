@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,9 @@ namespace LSQL
         private ComInsert comInsert;
         private ComDelete comDelete;
         private ComSelect comSelect;
+        private ComUpdate comUpdate;
+        private ComGrant comGrant;
+
         public SQLDeal()
         {
             baseCommand = new BaseCommand();
@@ -22,13 +26,15 @@ namespace LSQL
             comInsert = new ComInsert();
             comDelete = new ComDelete();
             comSelect = new ComSelect();
+            comUpdate = new ComUpdate();
+            comGrant = new ComGrant();
         }
         /// <summary>
         /// 查询语句单独处理
         /// </summary>
         /// <param name="comstr"></param>
         /// <returns></returns>
-        public List<string[]> dealSelect(string comstr)
+        public DataTable dealSelect(string comstr)
         {
             return comSelect.dealCom(comstr);
         }
@@ -91,11 +97,11 @@ namespace LSQL
             }
             else if (CmdStr[0] == "update")
             {
-                return baseCommand.modifyRecord("table1", 3, "MLGB");
+                return comUpdate.dealCom(str);
             }
-            else if (CmdStr[0] == "getstring")
+            else if (CmdStr[0] == "grant")
             {
-                return DataUtil.getStringFromBracket(str);
+                return comGrant.dealCom(str);
             }
             return "Unable to identify";
         }

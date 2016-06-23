@@ -19,7 +19,13 @@ namespace LSQL
             tableName = ele[2];
             colName = ele[4];
             colValue = ele[6];
-            while(true)
+            //权限检测
+            bool hasPer = (new JudgePermission()).hasPermission(
+                baseCom.getCurrentUser(), tableName, "delete");
+            if (!hasPer)
+                return "Permission Denied";
+
+            while (true)
             {
                 int pos = baseCom.findPos(tableName, colName, colValue);
                 if (pos == -1)

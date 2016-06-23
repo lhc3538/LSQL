@@ -36,9 +36,32 @@ namespace LSQL
 
         private void button1_Click(object sender, EventArgs e)
         {
-            hadLogin = true;
-            this.Visible = false;
-            
+            BaseCommand basecom = new BaseCommand();
+            ComSelect comselect = new ComSelect();
+            string user_str = textBox1.Text;
+            string pwd_str = textBox2.Text;
+
+            basecom.useUser("admin");
+            basecom.useDatabase("config");
+            DataTable dt = comselect.dealCom("select password from user where username = "+ user_str);
+            if (dt.Rows.Count == 0)
+                MessageBox.Show("用户不存在");
+            else
+            {
+                if (dt.Rows[0]["password"].Equals(pwd_str))
+                {
+                    hadLogin = true;
+                    this.Visible = false;
+                    basecom.useUser(user_str);
+                }
+                else
+                    MessageBox.Show("密码错误");
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

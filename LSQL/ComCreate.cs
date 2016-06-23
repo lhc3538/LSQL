@@ -56,6 +56,16 @@ namespace LSQL
             return "success";
         }
         /// <summary>
+        /// 创建视图
+        /// </summary>
+        /// <param name="table_name"></param>
+        /// <returns></returns>
+        public string createView(string table_name)
+        {
+
+            return "success";
+        }
+        /// <summary>
         /// 创建表
         /// </summary>
         /// <param name="name">表名</param>

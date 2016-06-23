@@ -50,8 +50,10 @@
     <Compile Include="ComAlter.cs" />
     <Compile Include="ComCreate.cs" />
     <Compile Include="ComDelete.cs" />
+    <Compile Include="ComGrant.cs" />
     <Compile Include="ComInsert.cs" />
     <Compile Include="ComSelect.cs" />
+    <Compile Include="ComUpdate.cs" />
     <Compile Include="DataDict.cs" />
     <Compile Include="DataUtil.cs" />
     <Compile Include="FileIO.cs" />
@@ -67,6 +69,7 @@
     <Compile Include="FormTerminal.Designer.cs">
       <DependentUpon>FormTerminal.cs</DependentUpon>
     </Compile>
+    <Compile Include="JudgePermission.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLDeal.cs" />

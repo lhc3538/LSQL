@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace LSQL
         private string homePath;  //DBMS根目录
         private FileIO fileIO;  //具体数据库操作类
         private static string currentDataBase = "";   //当前数据库
+        private static string currentUser = ""; //当前用户
         public static char colSeparator = (char)2;    //列间分隔符
 
         public BaseCommand()
@@ -32,6 +34,43 @@ namespace LSQL
                 return "select success";
             }
             return "Database not exist";
+        }
+
+        /// <summary>
+        /// 切换当前用户
+        /// </summary>
+        /// <param name="username">用户名</param>
+        /// <param name="pwd">密码</param>
+        /// <returns></returns>
+        public string useUser(string username)
+        {
+            currentDataBase = "";
+            currentUser = username;
+            return "success";
+        }
+
+        /// <summary>
+        /// 获取当前用户
+        /// </summary>
+        /// <returns></returns>
+        public string getCurrentUser()
+        {
+            return currentUser;
+        }
+
+        /// <summary>
+        /// 获取数据库所有用户名密码
+        /// </summary>
+        /// <returns></returns>
+        private List<string[]> getUserData()
+        {
+            List<string[]> result = new List<string[]>();
+            List<string> lines = fileIO.readAllLine(homePath + "config" + @"\" + "user");
+            for (int i=0;i<lines.Count;i++)
+            {
+                result.Add(lines[i].Split());
+            }
+            return result;
         }
 
         /// <summary>
@@ -367,19 +406,67 @@ namespace LSQL
         }
 
         /// <summary>
-        /// 获取所有记录
+        /// 获取所有记录，没有表头
         /// </summary>
         /// <param name="table_name"></param>
-        /// <returns></returns>
-        public List<string[]> getAllRecord(string table_name)
+        /// <returns>链表数据</returns>
+        public List<string[]> readAllRecords(string table_name)
         {
-            List<string[]> result = new List<string[]>();
+            List<string[]> allracord = new List<string[]>();
             List<string> all_record = fileIO.readAllLine(homePath + currentDataBase + @"\" + table_name);
-            for (int i=1;i<all_record.Count;i++)
+            for (int i = 1; i < all_record.Count; i++)
             {
-                result.Add(all_record[i].Split(colSeparator));
+                allracord.Add(all_record[i].Split(colSeparator));
             }
-            return result;
+            return allracord;
+        }
+
+        /// <summary>
+        /// 获取所有记录,没有表头
+        /// </summary>
+        /// <param name="table_name"></param>
+        /// <returns>表型数据</returns>
+        public DataTable getAllRecord(string table_name)
+        {
+            List<string[]> allracord = readAllRecords(table_name);
+
+            DataTable dt = new DataTable();
+            List<string> col_name = getColName(table_name);
+            for (int i = 0; i < col_name.Count; i++)//添加列
+                dt.Columns.Add(col_name[i], typeof(string));
+
+            for (int i = 0; i < allracord.Count; i++)
+            {
+                DataRow dr = dt.NewRow();
+                for (int j = 0; j < allracord[i].Length; j++)
+                {
+                    dr[j] = allracord[i][j];
+                }
+                dt.Rows.Add(dr);
+            }
+            return dt;
+        }
+
+        /// <summary>
+        /// 写入所有记录
+        /// </summary>
+        /// <param name="all_record"></param>
+        /// <returns></returns>
+        public string setAllRecord(string table_name,DataTable all_record)
+        {
+            for (int i=0;i<all_record.Rows.Count;i++)
+            {
+                string line_data = "";
+                for (int j=0;j<all_record.Columns.Count;j++)
+                {
+                    if (j == 0)
+                        line_data = all_record.Rows[i][j].ToString();
+                    else
+                        line_data += (colSeparator + all_record.Rows[i][j].ToString());
+                }
+                fileIO.modifyLine(homePath + currentDataBase + @"\" + table_name, i + 1, line_data);
+            }
+            return "success";
         }
 
         /// <summary>

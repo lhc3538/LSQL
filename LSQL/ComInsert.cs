@@ -19,9 +19,16 @@ namespace LSQL
             tableName = ele[2];
             lineStr = DataUtil.getStringFromBracket(cmdstr);
             colEle = lineStr.Split(',');
-            
+            //权限检测
+            bool hasPer = (new JudgePermission()).hasPermission(
+                baseCom.getCurrentUser(), tableName, "insert");
+            if (!hasPer)
+                return "Permission Denied";
+
+            //载入相应的数据字典
             dataDict = new DataDict();
             dataDict.init(tableName);
+            //数据类型对应检测
             if (colEle.Length != dataDict.colName.Count)
                 return "数据数量错误";
             for (int i=0;i<colEle.Length;i++)   //判断类型
@@ -36,10 +43,28 @@ namespace LSQL
                     if (!DataUtil.isDouble(colEle[i]))
                         return colEle[i] + "非double";
                 }
-            }     
+            }
+            //约束检测
+            for (int i = 0; i < colEle.Length; i++)   //列循环
+            {
+                if (dataDict.colConst[i].Equals("notnull")) //非空约束
+                {
+                    if (colEle[i] == "")
+                        return "数据要求不为空";
+                }
+                else if (dataDict.colConst[i].Equals("primary"))    //主键约束
+                {
+                    if (colEle[i] == "")
+                        return "数据要求不为空";
+                    List<string> coldata = baseCom.readCol(tableName, i);
+                    for (int j = 0; j < coldata.Count; j++)
+                    {
+                        if (coldata[j].Equals(colEle[i]))
+                            return "不满足唯一性约束";
+                    }
+                }
+            }
             return baseCom.insertRecord(tableName, colEle); ;
         }
-
-     
     }
 }
