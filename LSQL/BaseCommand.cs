@@ -61,7 +61,7 @@ namespace LSQL
         /// 获取根目录
         /// </summary>
         /// <returns></returns>
-        public static string getHomePaht()
+        public static string getHomePath()
         {
             return homePath;
         }

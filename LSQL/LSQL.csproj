@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseCommand.cs" />
+    <Compile Include="BaseConfig.cs" />
     <Compile Include="ComAlter.cs" />
     <Compile Include="ComCreate.cs" />
     <Compile Include="ComDelete.cs" />

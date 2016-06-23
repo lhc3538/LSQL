@@ -69,7 +69,7 @@ namespace LSQL
         public string createView(string view_name,string str_select)
         {
             string line = view_name + BaseCommand.colSeparator + str_select;
-            string path = BaseCommand.getHomePaht() + "." + BaseCommand.getCurrentDataBase();
+            string path = BaseCommand.getHomePath() + "." + BaseCommand.getCurrentDataBase();
             fileIO.appendLine(line, path);
             return "success";
         }

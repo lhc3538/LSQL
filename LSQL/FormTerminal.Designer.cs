@@ -36,6 +36,8 @@
             // 
             // textOutput
             // 
+            this.textOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.textOutput.Location = new System.Drawing.Point(1, 2);
             this.textOutput.Multiline = true;
             this.textOutput.Name = "textOutput";
@@ -44,6 +46,8 @@
             // 
             // textInput
             // 
+            this.textInput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textInput.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.textInput.Location = new System.Drawing.Point(1, 484);
             this.textInput.Name = "textInput";
             this.textInput.Size = new System.Drawing.Size(510, 21);
@@ -53,6 +57,9 @@
             // 
             // dataGridView
             // 
+            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Location = new System.Drawing.Point(517, 2);
             this.dataGridView.Name = "dataGridView";

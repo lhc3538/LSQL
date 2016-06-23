@@ -38,19 +38,21 @@
             // 
             // textBox1
             // 
+            this.textBox1.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.textBox1.Location = new System.Drawing.Point(180, 67);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(217, 21);
             this.textBox1.TabIndex = 0;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // textBox2
             // 
+            this.textBox2.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.textBox2.Location = new System.Drawing.Point(180, 95);
             this.textBox2.Name = "textBox2";
             this.textBox2.PasswordChar = '●';
             this.textBox2.Size = new System.Drawing.Size(217, 21);
             this.textBox2.TabIndex = 1;
+            this.textBox2.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox2_KeyDown);
             // 
             // label1
             // 
@@ -101,6 +103,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormLogin";

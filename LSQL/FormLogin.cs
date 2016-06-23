@@ -59,9 +59,12 @@ namespace LSQL
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void textBox2_KeyDown(object sender, KeyEventArgs e)
         {
-
+            if (e.KeyCode == Keys.Enter)//如果输入的是回车键  
+            {
+                this.button1_Click(sender, e);//触发button事件  
+            }
         }
     }
 }
