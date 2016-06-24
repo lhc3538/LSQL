@@ -42,7 +42,7 @@
             this.textOutput.Multiline = true;
             this.textOutput.Name = "textOutput";
             this.textOutput.Size = new System.Drawing.Size(510, 476);
-            this.textOutput.TabIndex = 0;
+            this.textOutput.TabIndex = 1;
             // 
             // textInput
             // 
@@ -51,7 +51,7 @@
             this.textInput.Location = new System.Drawing.Point(1, 484);
             this.textInput.Name = "textInput";
             this.textInput.Size = new System.Drawing.Size(510, 21);
-            this.textInput.TabIndex = 1;
+            this.textInput.TabIndex = 0;
             this.textInput.TextChanged += new System.EventHandler(this.textInput_TextChanged);
             this.textInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textInput_KeyPress);
             // 

@@ -81,8 +81,9 @@ namespace LSQL
         /// <returns></returns>
         public string createTable(string name,string dict)
         {
-
             string rult = baseCom.createTable(name);  //创建空表
+            //授予当前用户操作权限
+            new ComGrant().dealCom("grant select,update,insert,delete on " + name + " to " + BaseCommand.getCurrentUser());
             if (rult != "success")
                 return rult;
             if (dict != "") //创建初始要求列

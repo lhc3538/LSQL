@@ -79,6 +79,12 @@ namespace LSQL
             }
             else if (CmdStr[0] == "help")
             {
+                string[] key = { "database", "table", "view" };
+                List<string> secondkey = new List<string>(key);
+                if (secondkey.IndexOf(CmdStr[1]) == -1)
+                    return CmdStr[1] + "无法解析，您是不是要输入database/table/view";
+                if (CmdStr.Length != 3)
+                    return "请输入对象名";
                 return comHelp.dealCom(str);
             }
             else if (CmdStr[0] == "use")
@@ -95,25 +101,45 @@ namespace LSQL
                 {
                     return baseCommand.dropTable(CmdStr[2]);
                 }
+                else
+                {
+                    return CmdStr[1] + "无法解析，您是不是要输入database/table";
+                }
             }
             else if (CmdStr[0] == "insert")
             {
+                if (CmdStr[1] != "into")
+                    return "您是不是要输入insert into ...";
                 return comInsert.dealCom(str);
             }
             else if (CmdStr[0] == "alter")
             {
+                if (CmdStr[1] != "table")
+                    return "您是不是要输入alter table ...";
                 return comAlter.dealCom(str);
             }
             else if (CmdStr[0] == "delete")
             {
+                if (CmdStr[1] != "from")
+                    return "您是不是要输入delete from ...";
+                if (CmdStr[3] != "where")
+                    return "字段不完整";
                 return comDelete.dealCom(str);
             }
             else if (CmdStr[0] == "update")
             {
+                if (CmdStr[2] != "set")
+                    return "字段不完整";
+                if (CmdStr[6] != "where")
+                    return "字段不完整";
                 return comUpdate.dealCom(str);
             }
             else if (CmdStr[0] == "grant")
             {
+                if (CmdStr[2] != "on")
+                    return "字段不完整";
+                if (CmdStr[4] != "to")
+                    return "字段不完整";
                 return comGrant.dealCom(str);
             }
             return "Unable to identify";
