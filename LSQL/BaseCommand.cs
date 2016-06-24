@@ -93,11 +93,39 @@ namespace LSQL
         /// </summary>
         /// <param name="name">数据库名</param>
         /// <returns>判断结果</returns>
-        private bool hadExistedDatabase(string name)
+        public bool hadExistedDatabase(string name)
         {
             string[] allDatabase = fileIO.getAllFolder(homePath);
             for (int i=0;i<allDatabase.Length;i++)
                 if (allDatabase[i] == name)
+                    return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 判断数据表是否存在
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool hadExistedTable(string name)
+        {
+            string[] alltable = fileIO.getAllFile(homePath + currentDataBase);
+            for (int i = 0; i < alltable.Length; i++)
+                if (alltable[i] == name)
+                    return true;
+            return false;
+        }
+
+        /// <summary>
+        /// 判断视图是否存在
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public bool hadExistedView(string name)
+        {
+            List<string[]> allview = new BaseConfig().getViews(currentDataBase);
+            for (int i = 0; i < allview.Count; i++)
+                if (allview[i][0] == name)
                     return true;
             return false;
         }
@@ -153,6 +181,8 @@ namespace LSQL
                 return "Please input table name";
             else
             {
+                if (hadExistedTable(tableName))
+                    return "数据表已经存在";
                 string result_database = fileIO.createFile(homePath + currentDataBase + @"\" + tableName);  //创建数据表
                 string result_dict = fileIO.createFile(homePath + currentDataBase + @"\." + tableName); //创建数据表对应的数据字典
                 if (result_database.Equals("success") && result_dict.Equals("success"))
@@ -169,7 +199,9 @@ namespace LSQL
         public string showTables()
         {
             if (currentDataBase!="")
-                return formatStringArray(fileIO.getAllFile(homePath + currentDataBase));
+            {
+                return formatStringArray(getTables());
+            }
             return "Please select database";
         }
 
@@ -179,14 +211,38 @@ namespace LSQL
         /// <returns>表名列表</returns>
         public List<string> getTables()
         {
-            string[] files = fileIO.getAllFile(homePath + currentDataBase);
-            List<string> list = new List<string>();
-            foreach(string name in files)
+            List<string> result = new List<string>();
+            if (currentDataBase != "")
             {
-                list.Add(name);
+                string[] allfile = fileIO.getAllFile(homePath + currentDataBase);
+                
+                for (int i=0;i<allfile.Length;i++)
+                {
+                    if (!allfile[i][0].Equals('.'))
+                        result.Add(allfile[i]);
+                }
             }
-            return list;
+            return result;
         }
+
+        /// <summary>
+        /// 显示所有视图
+        /// </summary>
+        /// <returns></returns>
+        public string showViews()
+        {
+            List < string[] > views = new BaseConfig().getViews(currentDataBase);
+            string result = "";
+            for (int i=0;i<views.Count; i++)
+            {
+                if (i == 0)
+                    result = views[i][0];
+                else
+                    result += ("\r\n" + views[i][0]);
+            }
+            return result;
+        }
+
 
         /// <summary>
         /// 格式化字符串数组
@@ -198,6 +254,18 @@ namespace LSQL
         {
             string result = "";
             for (int i = 0; i < strArr.Length; i++)
+            {
+                if (i == 0)
+                    result += strArr[i];
+                else
+                    result += "\r\n" + strArr[i];
+            }
+            return result;
+        }
+        protected string formatStringArray(List<string> strArr)
+        {
+            string result = "";
+            for (int i = 0; i < strArr.Count; i++)
             {
                 if (i == 0)
                     result += strArr[i];

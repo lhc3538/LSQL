@@ -52,6 +52,7 @@
     <Compile Include="ComCreate.cs" />
     <Compile Include="ComDelete.cs" />
     <Compile Include="ComGrant.cs" />
+    <Compile Include="ComHelp.cs" />
     <Compile Include="ComInsert.cs" />
     <Compile Include="ComSelect.cs" />
     <Compile Include="ComUpdate.cs" />

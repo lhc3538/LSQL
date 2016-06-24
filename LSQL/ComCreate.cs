@@ -81,6 +81,7 @@ namespace LSQL
         /// <returns></returns>
         public string createTable(string name,string dict)
         {
+
             string rult = baseCom.createTable(name);  //创建空表
             if (rult != "success")
                 return rult;

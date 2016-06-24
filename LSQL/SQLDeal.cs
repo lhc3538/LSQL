@@ -17,6 +17,7 @@ namespace LSQL
         private ComSelect comSelect;
         private ComUpdate comUpdate;
         private ComGrant comGrant;
+        private ComHelp comHelp;
 
         public SQLDeal()
         {
@@ -28,6 +29,7 @@ namespace LSQL
             comSelect = new ComSelect();
             comUpdate = new ComUpdate();
             comGrant = new ComGrant();
+            comHelp = new ComHelp();
         }
         /// <summary>
         /// 查询语句单独处理
@@ -45,20 +47,23 @@ namespace LSQL
         public string dealTerminal(string str)
         {
             string[] CmdStr = str.Split(' ');
+
             if (CmdStr[0] == "create")
             {
+                string[] key = { "database", "table", "view" };
+                List<string> secondkey = new List<string>(key);
+                if (secondkey.IndexOf(CmdStr[1]) == -1)
+                    return CmdStr[1] + "无法解析，您是不是要输入database/table/view";
+
                 return comCreate.dealCom(str);
-                //if (CmdStr[1] == "database")
-                //{
-                //    return baseCommand.createDataBase(CmdStr[2]);
-                //}
-                //else if (CmdStr[1] == "table")
-                //{
-                //    return baseCommand.createTable(CmdStr[2]);
-                //}
             }
             else if (CmdStr[0] == "show")
             {
+                string[] key = { "databases", "tables", "views" };
+                List<string> secondkey = new List<string>(key);
+                if (secondkey.IndexOf(CmdStr[1]) == -1)
+                    return CmdStr[1] + "无法解析，您是不是要输入databases/tables/views";
+
                 if (CmdStr[1] == "databases")
                 {
                     return baseCommand.showDataBases();
@@ -67,6 +72,14 @@ namespace LSQL
                 {
                     return baseCommand.showTables();
                 }
+                else if (CmdStr[1] == "views")
+                {
+                    return baseCommand.showViews();
+                }
+            }
+            else if (CmdStr[0] == "help")
+            {
+                return comHelp.dealCom(str);
             }
             else if (CmdStr[0] == "use")
             {
